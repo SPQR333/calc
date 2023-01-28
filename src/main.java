@@ -1,4 +1,7 @@
+import com.sun.xml.internal.ws.util.StringUtils;
+
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 //1-Калькулятор умеет выполнять операции сложения, вычитания, умножения и деления с двумя числами: a + b, a - b, a * b, a / b. +
 // Данные передаются в одну строку (смотри пример)! Решения, в которых каждое число и арифмитеческая операция передаются с новой строки считаются неверными.+
@@ -10,59 +13,57 @@ import java.util.Scanner;
 //7-При вводе пользователем неподходящих чисел приложение выбрасывает исключение и завершает свою работу.+
 //8-При вводе пользователем строки, не соответствующей одной из вышеописанных арифметических операций, приложение выбрасывает исключение и завершает свою работу.+
 //9-Результатом операции деления является целое число, остаток отбрасывается.+
-//10-Результатом работы калькулятора с арабскими числами могут быть отрицательные числа и ноль. Результатом работы калькулятора с римскими числами могут быть только положительные числа, если результат работы меньше единицы, выбрасывается исключение
+//10-Результатом работы калькулятора с арабскими числами могут быть отрицательные числа и ноль. Результатом работы калькулятора с римскими числами могут быть только положительные числа, если результат работы меньше единицы, выбрасывается исключение+
 
 public class main extends Exception {
-    public static void main(String[] args) {
-        calc("");
+    public static void main(String[] args)
+    {
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        calc(input);
+       // calc("II*V");
     }
 
 
     public static void calc(String input) {
-
-
-        Scanner scanner = new Scanner(System.in);
-        input = scanner.nextLine();
-
-
-        String[] values = input.split("[\\+|\\*|\\/|\\-]");
-
-
-        for (String number : values) {
-
+        long operators = input.chars().filter(c -> "+-*/".indexOf(c) >= 0).count();
+        if (operators != 1) {
+            throw new IllegalArgumentException("1 operator is expected, found " + operators);
         }
 
+        String[] values = input.split("[+*/\\-]");
+
+        String a22 = values[0];
+        String b22 = values[1];
+        char op = input.charAt(a22.length());
 
         Converter converter = new Converter();
 
         if (converter.isRoman(values[0]) == converter.isRoman(values[1])) {
-            int a, b;
-
             boolean isRoman = converter.isRoman(values[0]);
             if (isRoman) {
-
-                a = converter.romanToInt(values[0]);
-                b = converter.romanToInt(values[1]);
+                int a = converter.romanToInt(values[0]);
+                int b = converter.romanToInt(values[1]);
 
                 if (values.length == 2) {
 
-                    String operatorOne = String.valueOf(input.charAt(1));
-                    switch (operatorOne) {
-                        case "+":
+                    switch (op) {
+                        case '+':
                             System.out.println(converter.intToRoman(a + b));
                             break;
-                        case "-":
+                        case '-':
                             System.out.println(converter.intToRoman(a - b));
                             break;
-                        case "/":
+                        case '/':
                             System.out.println(converter.intToRoman(a / b));
                             break;
-                        case "*":
+                        case '*':
                             System.out.println(converter.intToRoman(a * b));
                             break;
                     }
 
-                }else {
+                } else {
+                    System.out.println("length != 2?");
                     String operatorTwo = String.valueOf(input.charAt(2));
                     switch (operatorTwo) {
                         case "+":
@@ -82,9 +83,10 @@ public class main extends Exception {
                 }
 
 
-            } else if (true){
-                a = Integer.parseInt(values[0]);
-                b = Integer.parseInt(values[1]);
+            }
+            else if (true) {
+                int a = Integer.parseInt(values[0]);
+                int b = Integer.parseInt(values[1]);
 
 
                 Integer a1 = Integer.valueOf(values[0]);
@@ -136,7 +138,7 @@ public class main extends Exception {
                     }
 
                 }
-            }else {
+            } else {
                 try {
                     throw new ScannerException();
                 } catch (ScannerException e) {
